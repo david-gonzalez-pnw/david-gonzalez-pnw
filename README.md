@@ -12,11 +12,11 @@ I'm happiest when the system handles the tedious bits so people can focus on the
 [![GraphQL](https://img.shields.io/badge/GraphQL-E10098?logo=graphql&logoColor=white)](https://graphql.org/)
 [![LangChain](https://img.shields.io/badge/LangChain-1C3C3C?logo=langchain&logoColor=white)](https://langchain.com/)
 
-- Turning natural language into structured, executable plans
-- Dev tooling for Firebase, Redis, and local workflows
-- Work in healthcare and veterinary platforms
-- FOIA-style connectors, queues, and streaming progress to the UI
-- Cloud-native clinic platform: Azure, .NET 8, native iOS (Swift/SwiftUI), PostgreSQL, multi-tenant, EMR, telemedicine, Bicep/azd
+- 🗺️ Turning natural language into structured, executable plans
+- 🔧 Dev tooling for Firebase, Redis, and local workflows
+- 🐾 Healthcare & vet platforms (side projects)
+- ⚡ Goals → plans with LangGraph; connectors, queues, and streaming progress in the UI
+- ☁️ Cloud-native clinic platform: Azure, .NET 8, native iOS (Swift/SwiftUI), PostgreSQL, multi-tenant, EMR, telemedicine, Bicep/azd
 
 ### Agentic loop (Codex SDLC)
 
