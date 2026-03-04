@@ -22,7 +22,7 @@ Dev in Seattle. I turn messy goals into clear plans—and I like it when the sys
 - 🗺️ **Goal → plan** - Plain language in, structured plans out. LangGraph, connectors, streaming progress. Human + automation in the same loop.
 - 📱 **Health & insights** - iOS + Azure. Energy, calendar, health, AI copilot. Keychain to Key Vault, device to cloud.
 - 🔧 **Dev orchestration** - One-click Firebase + Redis. Electron, so you can forget the plumbing.
-- ☁️ **Clinic platform (side)** — Multi-tenant. iOS + web, EMR to telemedicine. Azure, Bicep, built to scale.
+- ☁️ **Clinic platform (side)** - Multi-tenant. iOS + web, EMR to telemedicine. Azure, Bicep, built to scale.
 
 ---
 
