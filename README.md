@@ -20,25 +20,32 @@ I'm happiest when the system handles the tedious bits so people can focus on the
 
 ### Agentic loop (Codex SDLC)
 
-I'm playing with **agentic loops**—scheduled automations, skills, and human-in-the-loop handoffs—to see where "AI as a teammate" is actually going. Not one-shot prompts, but a repeatable loop: discover the need, spec it, build it, review it, fix it, ship it, with humans and the agent trading the baton at each step. The diagram below is the SDLC loop I run: from idea → RFC → engineering doc → code → PR review → ship, with a weekly *assess* off the critical path. It's my working map for how AI-assisted building is evolving.
+I'm playing with **agentic loops**—scheduled automations, skills, and human-in-the-loop handoffs—to see where "AI as a teammate" is actually going. Not one-shot prompts, but a repeatable loop: **Discovery → Build → Validate**, with **parallel inner loops** (reviewing, auditing, quality improvements) and **parallel assessors** (architecture, documentation) running alongside. The diagram below is the loop I run. It's my working map for how AI-assisted building is evolving.
 
 ```mermaid
-flowchart LR
-  subgraph sequential [Sequential]
-    A[Discover]
-    B[Review RFC]
-    C[Spec]
-    D[Build]
+flowchart TB
+  subgraph main [Main loop: Discovery → Build → Validate]
+    D[Discovery]
+    B[Build]
+    V[Validate]
   end
-  subgraph reviewPR [Review PR - parallel or staggered]
-    E[RFC expert review]
-    F[PR review]
+  D --> B --> V
+  V -.->|iterate| D
+
+  subgraph inner [Parallel inner loops]
+    direction LR
+    R[Reviewing]
+    A[Auditing]
+    Q[Quality improvements]
   end
-  subgraph afterReview [After review]
-    G[Fix]
-    H[Ship]
+  B --> inner
+  inner --> V
+
+  subgraph assessors [Parallel assessors]
+    direction LR
+    Arch[Architecture]
+    Doc[Documentation]
   end
-  I[Assess - weekly]
-  A --> B --> C --> D --> reviewPR --> G --> H
-  I -.->|off critical path| I
+  V -.->|assess| Arch
+  V -.->|assess| Doc
 ```
