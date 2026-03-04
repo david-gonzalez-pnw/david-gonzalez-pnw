@@ -20,6 +20,8 @@ I'm happiest when the system handles the tedious bits so people can focus on the
 
 ### Agentic loop (Codex SDLC)
 
+I'm playing with **agentic loops**—scheduled automations, skills, and human-in-the-loop handoffs—to see where "AI as a teammate" is actually going. Not one-shot prompts, but a repeatable loop: discover the need, spec it, build it, review it, fix it, ship it, with humans and the agent trading the baton at each step. The diagram below is the SDLC loop I run: from idea → RFC → engineering doc → code → PR review → ship, with a weekly *assess* off the critical path. It's my working map for how AI-assisted building is evolving.
+
 ```mermaid
 flowchart LR
   subgraph sequential [Sequential]
