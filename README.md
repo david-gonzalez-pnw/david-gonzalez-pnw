@@ -1,10 +1,8 @@
 ## Hi, I'm Gonzo
 
-Dev in Seattle. Into AI, automation, and building things that turn messy goals into clear plans. I use **Codex** for agentic development.
+Dev in Seattle. I turn messy goals into clear plans—and I like it when the system does the tedious work so people (and their pets) can do the rest. I use **Codex** for agentic development.
 
-I'm happiest when the system handles the tedious bits so people can focus on the parts that actually need a human—and I like it when those systems help real people (and their pets) instead of just moving pixels around.
-
-**Currently:** Building a platform that turns natural-language goals into structured, executable plans; a health, productivity, and personal insights app (iOS + Azure); side projects include a multi-tenant clinic system and local dev orchestration (Firebase + Redis).
+**Right now:** Goal-to-plan platform · Health & productivity app (iOS + Azure) · Clinic platform & dev tooling on the side
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Firebase](https://img.shields.io/badge/Firebase-FFCA28?logo=firebase&logoColor=black)](https://firebase.google.com/)
@@ -12,14 +10,20 @@ I'm happiest when the system handles the tedious bits so people can focus on the
 [![GraphQL](https://img.shields.io/badge/GraphQL-E10098?logo=graphql&logoColor=white)](https://graphql.org/)
 [![LangChain](https://img.shields.io/badge/LangChain-1C3C3C?logo=langchain&logoColor=white)](https://langchain.com/)
 
-- 🗺️ **Goal → plan:** You describe a goal in plain language; the system returns a structured plan (phases, steps, roles). Steps can be human-only, automated, or mixed—automation is wired as tools, agents, and webhooks. Under the hood: a LangGraph pipeline (normalize → generate → attach actions), streaming job progress in the UI, and connectors that plug in external workflows and data.
-- 📱 **Health, productivity & personal insights:** A client/cloud hybrid—native iOS (SwiftUI/MVVM) with an Azure Functions API. Energy insights, calendar sync (Google, Apple, Outlook), HealthKit-based analytics, an AI copilot chat, and push notifications (APNS). Security-first: Keychain and Key Vault for secrets, JWT and device attestation; AI (OpenAI) for personalized recommendations and learning from feedback. Azure Table Storage for events and sync state.
-- 🔧 **Local dev orchestration:** An Electron app that runs Firebase emulator and Redis (Docker) with one-click start/restart and live status, so the rest of the stack stays out of your way.
-- ☁️ **Multi-tenant clinic platform (side project):** Native iOS for owners (offline-first), staff web portal, EMR, appointments, billing, telemedicine, and inventory. Built on Azure (.NET 8, PostgreSQL, Service Bus, Entra), multi-tenant by design, with Bicep/azd for infra.
+---
 
-### Agentic loop (Codex SDLC)
+**What I'm building**
 
-I'm playing with **agentic loops**—scheduled automations, skills, and human-in-the-loop handoffs—to see where "AI as a teammate" is actually going. Not one-shot prompts, but a repeatable loop: **Discovery → Build → Validate**, with **parallel inner loops** (reviewing, auditing, quality improvements) and **parallel assessors** (architecture, documentation) running alongside. The diagram below is the loop I run. It's my working map for how AI-assisted building is evolving.
+- 🗺️ **Goal → plan** — Plain language in, structured plans out. LangGraph, connectors, streaming progress. Human + automation in the same loop.
+- 📱 **Health & insights** — iOS + Azure. Energy, calendar, health, AI copilot. Keychain to Key Vault, device to cloud.
+- 🔧 **Dev orchestration** — One-click Firebase + Redis. Electron, so you can forget the plumbing.
+- ☁️ **Clinic platform (side)** — Multi-tenant. iOS + web, EMR to telemedicine. Azure, Bicep, built to scale.
+
+---
+
+### Agentic loop
+
+I run **Discovery → Build → Validate** with parallel review, audit, and quality—plus architecture and docs as assessors. Below is the map.
 
 ```mermaid
 flowchart TB
