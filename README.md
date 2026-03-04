@@ -19,9 +19,9 @@ Dev in Seattle. I turn messy goals into clear plans—and I like it when the sys
 | <img width="2048" height="1365" alt="fusionhealth_blurred" src="https://github.com/user-attachments/assets/6af48369-a1a1-4b65-9e56-083e53bdd0dc" /> | <img width="2400" height="1600" alt="image" src="https://github.com/user-attachments/assets/af78c2ea-06bc-4404-a9f3-eab61d1d0df3" /> |
 
 
-- 🗺️ **Goal → plan** — Plain language in, structured plans out. LangGraph, connectors, streaming progress. Human + automation in the same loop.
-- 📱 **Health & insights** — iOS + Azure. Energy, calendar, health, AI copilot. Keychain to Key Vault, device to cloud.
-- 🔧 **Dev orchestration** — One-click Firebase + Redis. Electron, so you can forget the plumbing.
+- 🗺️ **Goal → plan** - Plain language in, structured plans out. LangGraph, connectors, streaming progress. Human + automation in the same loop.
+- 📱 **Health & insights** - iOS + Azure. Energy, calendar, health, AI copilot. Keychain to Key Vault, device to cloud.
+- 🔧 **Dev orchestration** - One-click Firebase + Redis. Electron, so you can forget the plumbing.
 - ☁️ **Clinic platform (side)** — Multi-tenant. iOS + web, EMR to telemedicine. Azure, Bicep, built to scale.
 
 ---
