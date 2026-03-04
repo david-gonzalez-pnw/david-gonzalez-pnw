@@ -24,13 +24,11 @@ I'm playing with **agentic loops**—scheduled automations, skills, and human-in
 
 ```mermaid
 flowchart TB
-  subgraph main [Main loop: Discovery → Build → Validate]
-    D[Discovery]
-    B[Build]
-    V[Validate]
+  subgraph main [Main path]
+    direction LR
+    D[Discovery] --> B[Build] --> V[Validate]
+    V -.->|iterate| D
   end
-  D --> B --> V
-  V -.->|iterate| D
 
   subgraph inner [Parallel inner loops]
     direction LR
@@ -38,14 +36,10 @@ flowchart TB
     A[Auditing]
     Q[Quality improvements]
   end
-  B --> inner
-  inner --> V
 
   subgraph assessors [Parallel assessors]
     direction LR
     Arch[Architecture]
     Doc[Documentation]
   end
-  V -.->|assess| Arch
-  V -.->|assess| Doc
 ```
