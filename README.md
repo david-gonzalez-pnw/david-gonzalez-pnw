@@ -23,7 +23,7 @@ Dev in Seattle. I turn messy goals into clear plans—and I like it when the sys
 ### Agentic loop
 
 I'm playing with a mix of AI tools and processes. I'm using Codex and I've set up an agentic 
-loop, without any fancy triggers yet, to run Discovery → Build → Validate with parallel review, audit, and quality—and architecture and docs as assessors. Below is the map.
+loop, without any fancy triggers yet, to run Discovery → Build → Validate with parallel review, audit, and quality, architecture, and docs as assessors. My goal is build an entire platform using this mechanism as I learn about the prompting/quality/drift loops. Below is a high-level representation of these different agents, I'm involved in key moments to guide the process with the goal of removing myself more and more through the process.
 
 ```mermaid
 flowchart TB
