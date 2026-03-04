@@ -14,6 +14,11 @@ Dev in Seattle. I turn messy goals into clear plans—and I like it when the sys
 
 **What I'm building**
 
+| | |
+|:---:|:---:|
+| [![Health & insights](assets/fusionhealth-teaser.png)](https://fusionhealth.ai/) | [![Goal → plan](assets/planapus-teaser.png)](https://beta.planapus.com/) |
+| *Health, productivity & personal insights* ([fusionhealth.ai](https://fusionhealth.ai/)) | *Goal → plan platform* ([beta.planapus.com](https://beta.planapus.com/)) |
+
 - 🗺️ **Goal → plan** — Plain language in, structured plans out. LangGraph, connectors, streaming progress. Human + automation in the same loop.
 - 📱 **Health & insights** — iOS + Azure. Energy, calendar, health, AI copilot. Keychain to Key Vault, device to cloud.
 - 🔧 **Dev orchestration** — One-click Firebase + Redis. Electron, so you can forget the plumbing.
