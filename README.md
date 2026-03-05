@@ -59,3 +59,5 @@ flowchart TB
 ![Codex](https://img.shields.io/badge/Codex-6C2DC7?style=flat-square)
 ![Electron](https://img.shields.io/badge/Electron-2B2E3A?logo=electron&logoColor=9FEAF9)
 ![Redis](https://img.shields.io/badge/Redis-DC382D?logo=redis&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
+![Bicep](https://img.shields.io/badge/Bicep-0091ED?logo=bicep&logoColor=white)
