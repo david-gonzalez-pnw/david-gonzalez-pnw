@@ -1,12 +1,12 @@
-## Hi, I'm Gonzo
+# Hi, I'm Gonzo <img width="40" height="40" src="https://2.gravatar.com/avatar/867c4e2a2d89a401fc2872addb92647656327ae6e1bb990c7c8151bcbce18651?size=256&d=initials" />
 
-Dev in Seattle. I turn messy goals into clear plans—and I like it when the system does the tedious work so people (and their pets) can do the rest.
+Developer and leader in Seattle. Docusign resident and also entrepreneur-curious.
 
 **Right now:** Goal-to-plan platform · Health & productivity app (iOS + Azure) · Clinic platform & dev tooling on the side
 
 ---
 
-**What I'm building**
+#### What I'm building
 
 | *Health, productivity & personal insights* | *Goal → plan platform* |
 |:---:|:---:|
