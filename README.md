@@ -22,7 +22,7 @@ Developer and leader in Seattle. Docusign resident and also entrepreneur-curious
 
 ### Agentic loop
 
-I'm playing with a mix of AI tools and processes. I'm using Codex and I've set up an agentic 
+I'm playing with a mix of AI tools and processes. I'm using Codex and Claude desktop apps to configure an agentic 
 loop, without any fancy triggers yet, to run Discovery → Build → Validate with parallel review, audit, and quality, architecture, and docs as assessors. My goal is build an entire platform using this mechanism as I learn about the prompting/quality/drift loops. Below is a high-level representation of these different agents, I'm involved in key moments to guide the process with the goal of removing myself more and more through the process.
 
 ```mermaid
