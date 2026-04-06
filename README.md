@@ -2,7 +2,7 @@
 
 Developer and leader in Seattle. Docusign resident and also entrepreneur-curious.
 
-**Right now:** Goal-to-plan platform · Health & productivity app (iOS + Azure) · Clinic platform & dev tooling on the side
+**Right now:** Goal-to-plan platform · Health & productivity app (iOS + Azure) · Veterinary Clinic platform & dev tooling on the side
 
 ---
 
