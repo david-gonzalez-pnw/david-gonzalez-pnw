@@ -43,3 +43,16 @@ public struct CalendarSyncCoordinator {
         try await local.addToDefaultCalendar(event)
     }
 }
+
+public extension CalendarSyncCoordinator {
+    /// Builds a coordinator whose provider is real Cronofy when configured and
+    /// connected, otherwise the offline stub. Used by the extension's create flow.
+    static func makeDefault(
+        cronofyConfig: CronofyConfig = .shared,
+        backend: ConveneBackendClient = StubBackendClient()
+    ) -> CalendarSyncCoordinator {
+        let tokenStore = CronofyTokenStore(backend: backend)
+        let provider = CalendarProviderFactory.make(cronofyConfig: cronofyConfig, tokenStore: tokenStore)
+        return CalendarSyncCoordinator(provider: provider)
+    }
+}

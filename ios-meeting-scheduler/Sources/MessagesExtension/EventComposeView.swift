@@ -1,16 +1,19 @@
 import SwiftUI
 import ConveneKit
 
-/// Confirm event details, sync to the organizer's calendars via the backend,
-/// then share a tappable event bubble into the thread.
+/// Confirm event details, sync to the organizer's calendars via Cronofy (or the
+/// stub when offline), then share a tappable event bubble into the thread.
 struct EventComposeView: View {
     let organizerName: String
     let actions: ExtensionActions
-    var backend: ConveneBackendClient = StubBackendClient()
     var prefillTitle: String?
     var prefillSlot: TimeSlot?
-    /// Source-of-truth calendar. Resolved from the user's default account in Phase 2.
-    var defaultCalendarID: String = StubCalendarSyncProvider.demoCalendars.first?.id ?? "default"
+
+    private let coordinator = CalendarSyncCoordinator.makeDefault()
+    /// Source-of-truth calendar chosen in the host app; falls back to a demo calendar offline.
+    private let defaultCalendarID = CalendarSelectionStore.defaultCalendarID()
+        ?? StubCalendarSyncProvider.demoCalendars.first?.id
+        ?? "default"
 
     @State private var title: String
     @State private var start: Date
@@ -22,13 +25,11 @@ struct EventComposeView: View {
     init(
         organizerName: String,
         actions: ExtensionActions,
-        backend: ConveneBackendClient = StubBackendClient(),
         prefillTitle: String? = nil,
         prefillSlot: TimeSlot? = nil
     ) {
         self.organizerName = organizerName
         self.actions = actions
-        self.backend = backend
         self.prefillTitle = prefillTitle
         self.prefillSlot = prefillSlot
         _title = State(initialValue: prefillTitle ?? "")
@@ -55,7 +56,7 @@ struct EventComposeView: View {
                 .buttonStyle(.borderedProminent)
                 .disabled(isSyncing || title.isEmpty)
             } footer: {
-                Text("Synced to your calendars, then shared here so everyone can add it with one tap.")
+                Text("Synced to your calendars via Cronofy, then shared here so everyone can add it with one tap.")
             }
         }
         .navigationTitle("New event")
@@ -69,7 +70,7 @@ struct EventComposeView: View {
 
     private func createAndShare() {
         let organizer = Attendee(id: "organizer", name: organizerName)
-        var event = MeetingEvent(
+        let event = MeetingEvent(
             id: UUID(),
             title: title,
             start: start,
@@ -81,14 +82,10 @@ struct EventComposeView: View {
         isSyncing = true
         Task {
             do {
-                let response = try await backend.createEvent(
-                    API.CreateEventRequest(event: event, defaultCalendarID: defaultCalendarID)
-                )
-                event.remoteID = response.ref.remoteID
-                event.icsURL = response.ref.icsURL
+                let synced = try await coordinator.confirmAndSync(event, defaultCalendarID: defaultCalendarID)
                 await MainActor.run {
                     isSyncing = false
-                    actions.sendEvent(event, nil)
+                    actions.sendEvent(synced, nil)
                 }
             } catch {
                 await MainActor.run {

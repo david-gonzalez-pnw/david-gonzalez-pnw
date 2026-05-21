@@ -1,43 +1,32 @@
 import Foundation
 
-/// Client for the Convene backend. The backend owns provider OAuth tokens and
-/// fronts the unified calendar API; the app talks only to this.
+/// Client for the Convene backend, which brokers Cronofy OAuth. The backend
+/// holds the Cronofy client secret and refresh tokens; the app only ever
+/// receives short-lived access tokens.
 public protocol ConveneBackendClient {
-    func exchangeAuthCode(_ request: API.AuthExchangeRequest) async throws -> API.AuthExchangeResponse
-    func createEvent(_ request: API.CreateEventRequest) async throws -> API.CreateEventResponse
-    func submitRSVP(remoteID: String, _ request: API.RSVPRequest) async throws
+    func exchangeCronofyCode(_ request: API.CronofyExchangeRequest) async throws -> API.CronofyExchangeResponse
+    func refreshCronofyAccessToken(accountID: String) async throws -> API.CronofyRefreshResponse
 }
 
-/// Stub backed by an in-memory `StubCalendarSyncProvider`, so the app's event
-/// flow works end-to-end before any server exists. Phase 2 replaces this with an
-/// `URLSession`-based client hitting the real API (see APIContract.swift).
+/// Fakes the OAuth exchange so the host-app connect flow runs before the backend
+/// exists. The returned token is not a real Cronofy token — `CalendarProviderFactory`
+/// only uses the live Cronofy provider when `CronofyConfig` is configured, so in
+/// offline mode the app falls back to `StubCalendarSyncProvider`.
+///
+/// Phase 2 replaces this with a `URLSession` client hitting the real backend (see APIContract.swift).
 public final class StubBackendClient: ConveneBackendClient {
-    private let provider: StubCalendarSyncProvider
+    public init() {}
 
-    public init(provider: StubCalendarSyncProvider = StubCalendarSyncProvider()) {
-        self.provider = provider
-    }
-
-    public func exchangeAuthCode(_ request: API.AuthExchangeRequest) async throws -> API.AuthExchangeResponse {
-        let account = ConnectedAccount(
-            id: UUID().uuidString,
-            kind: request.provider,
-            email: "you@\(request.provider.rawValue).example",
-            isDefault: true
+    public func exchangeCronofyCode(_ request: API.CronofyExchangeRequest) async throws -> API.CronofyExchangeResponse {
+        API.CronofyExchangeResponse(
+            accessToken: "stub-access-token",
+            expiresIn: 3600,
+            accountID: "stub-account",
+            providerName: "Cronofy"
         )
-        let calendars = try await provider.availableCalendars()
-        return API.AuthExchangeResponse(account: account, calendars: calendars)
     }
 
-    public func createEvent(_ request: API.CreateEventRequest) async throws -> API.CreateEventResponse {
-        let ref = try await provider.createEvent(request.event, in: request.defaultCalendarID)
-        for calendarID in request.mirrorCalendarIDs where calendarID != request.defaultCalendarID {
-            _ = try? await provider.createEvent(request.event, in: calendarID)
-        }
-        return API.CreateEventResponse(ref: ref)
-    }
-
-    public func submitRSVP(remoteID: String, _ request: API.RSVPRequest) async throws {
-        try await provider.updateRSVP(remoteID: remoteID, attendee: request.attendee, status: request.status)
+    public func refreshCronofyAccessToken(accountID: String) async throws -> API.CronofyRefreshResponse {
+        API.CronofyRefreshResponse(accessToken: "stub-access-token", expiresIn: 3600)
     }
 }

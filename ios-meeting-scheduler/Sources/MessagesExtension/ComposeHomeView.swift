@@ -5,7 +5,6 @@ import ConveneKit
 struct ComposeHomeView: View {
     let organizerName: String
     let actions: ExtensionActions
-    var backend: ConveneBackendClient = StubBackendClient()
 
     var body: some View {
         NavigationStack {
@@ -17,7 +16,7 @@ struct ComposeHomeView: View {
                         Label("New date poll", systemImage: "chart.bar.doc.horizontal")
                     }
                     NavigationLink {
-                        EventComposeView(organizerName: organizerName, actions: actions, backend: backend)
+                        EventComposeView(organizerName: organizerName, actions: actions)
                     } label: {
                         Label("Schedule an event", systemImage: "calendar.badge.plus")
                     }

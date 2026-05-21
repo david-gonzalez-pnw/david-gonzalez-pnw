@@ -10,27 +10,27 @@ struct ConnectAccountsView: View {
             Image(systemName: "calendar.badge.plus")
                 .font(.system(size: 56))
                 .foregroundStyle(.tint)
-            Text("Connect your calendars")
+            Text("Connect your calendar")
                 .font(.title2.bold())
-            Text("Convene polls your group in iMessage, then syncs the agreed meeting to every calendar you connect.")
+            Text("Convene uses Cronofy to connect Google, Outlook, or iCloud in one step — no per-provider setup. Polls happen in iMessage; agreed meetings sync to your calendar.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
 
-            VStack(spacing: 12) {
-                ForEach(CalendarProviderKind.allCases) { kind in
-                    Button {
-                        Task { await accounts.connect(kind) }
-                    } label: {
-                        Label("Connect \(kind.displayName)", systemImage: "link")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .disabled(accounts.isWorking)
-                }
+            Button {
+                Task { await accounts.connect() }
+            } label: {
+                Label("Connect a calendar", systemImage: "link")
+                    .frame(maxWidth: .infinity)
             }
+            .buttonStyle(.borderedProminent)
+            .disabled(accounts.isWorking)
             .padding(.horizontal)
+
+            if accounts.isWorking {
+                ProgressView()
+            }
 
             Spacer()
         }

@@ -32,9 +32,28 @@ open Messages, and find Convene in the app drawer ("+" button).
 | `Sources/Shared` | `ConveneKit`: models, poll engine, codecs, services |
 | `Tests/ConveneKitTests` | Unit tests for the poll engine and message codec |
 
+## Calendar provider: Cronofy
+
+Convene uses **Cronofy** so there are no per‑provider OAuth apps and no
+Google/Microsoft production verification — one app in the Cronofy dashboard
+covers Google, Outlook, and iCloud. The real `CronofyCalendarSyncProvider` and
+hosted‑auth wiring are implemented; only the secret‑bearing token exchange is
+stubbed until you stand up the backend.
+
+To go live:
+1. Create an application in the Cronofy dashboard; register the redirect URI
+   `convene://oauth/cronofy`.
+2. Set `clientID` (and `dataCenter`) in `CronofyConfig.shared`
+   (`Sources/Shared/Calendar/Cronofy/CronofyConfig.swift`).
+3. Implement the backend's `/oauth/token` exchange + refresh (holds the client
+   secret) and point `StubBackendClient` at it.
+
+With `clientID` empty, the app runs offline against `StubCalendarSyncProvider`.
+
 ## Status
 
 Phase 0 (this scaffold): models, poll engine, message URL codec, on‑device
-EventKit writes, **stubbed** backend + OAuth, host‑app onboarding shell.
-Cross‑provider sync (Cronofy / Nylas / Composio) is behind the
-`CalendarSyncProvider` protocol and lands in a later phase.
+EventKit writes, host‑app onboarding shell, and the **real Cronofy REST
+provider + `ASWebAuthenticationSession` hosted auth** behind a stubbed token
+broker. Other providers (Nylas / Composio) remain drop‑in via the
+`CalendarSyncProvider` protocol.

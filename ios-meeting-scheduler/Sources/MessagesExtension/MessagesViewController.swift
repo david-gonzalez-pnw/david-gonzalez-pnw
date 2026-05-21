@@ -14,9 +14,6 @@ struct ExtensionActions {
 final class MessagesViewController: MSMessagesAppViewController {
     private var hosting: UIViewController?
 
-    private lazy var connectionService: AccountConnectionService = StubAccountConnectionService()
-    private lazy var backend: ConveneBackendClient = StubBackendClient()
-
     // MARK: - Lifecycle
 
     override func willBecomeActive(with conversation: MSConversation) {

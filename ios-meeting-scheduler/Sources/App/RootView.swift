@@ -6,10 +6,10 @@ struct RootView: View {
 
     var body: some View {
         NavigationStack {
-            if accounts.accounts.isEmpty {
-                ConnectAccountsView()
-            } else {
+            if accounts.isConnected {
                 SettingsView()
+            } else {
+                ConnectAccountsView()
             }
         }
     }

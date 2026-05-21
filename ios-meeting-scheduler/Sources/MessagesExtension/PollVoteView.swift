@@ -10,7 +10,6 @@ struct PollVoteView: View {
     let voterID: String
     let session: MSSession?
     let actions: ExtensionActions
-    var backend: ConveneBackendClient = StubBackendClient()
 
     private var myVote: UUID? { poll.votes.first(where: { $0.voterID == voterID })?.slotID }
 
@@ -48,7 +47,6 @@ struct PollVoteView: View {
                             EventComposeView(
                                 organizerName: poll.organizerName,
                                 actions: actions,
-                                backend: backend,
                                 prefillTitle: poll.title,
                                 prefillSlot: winner
                             )

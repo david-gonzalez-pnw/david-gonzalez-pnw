@@ -1,59 +1,46 @@
 import Foundation
 
-/// Wire DTOs for the future Convene backend. Documenting the contract as code
-/// keeps the client and (eventual) server in sync. The backend brokers OAuth and
-/// fronts the unified calendar provider (Cronofy / Nylas / Composio).
+/// Wire DTOs for the Convene backend. The backend's only job is to broker
+/// Cronofy OAuth: it holds the Cronofy client secret, exchanges/refreshes
+/// tokens, and receives RSVP push notifications. All calendar reads/writes
+/// happen client-side via `CronofyCalendarSyncProvider` using these tokens.
 public enum API {
 
-    // POST /v1/auth/{provider}/exchange
-    public struct AuthExchangeRequest: Codable, Equatable {
-        public var provider: CalendarProviderKind
-        public var authorizationCode: String
+    // POST /v1/cronofy/token  — exchange the hosted-auth code for tokens.
+    // The backend keeps the refresh token; the app receives only a short-lived access token.
+    public struct CronofyExchangeRequest: Codable, Equatable {
+        public var code: String
         public var redirectURI: String
-        public init(provider: CalendarProviderKind, authorizationCode: String, redirectURI: String) {
-            self.provider = provider
-            self.authorizationCode = authorizationCode
+        public init(code: String, redirectURI: String) {
+            self.code = code
             self.redirectURI = redirectURI
         }
     }
 
-    public struct AuthExchangeResponse: Codable, Equatable {
-        public var account: ConnectedAccount
-        public var calendars: [CalendarRef]
-        public init(account: ConnectedAccount, calendars: [CalendarRef]) {
-            self.account = account
-            self.calendars = calendars
+    public struct CronofyExchangeResponse: Codable, Equatable {
+        public var accessToken: String
+        public var expiresIn: Int
+        public var accountID: String
+        public var providerName: String?
+        public init(accessToken: String, expiresIn: Int, accountID: String, providerName: String? = nil) {
+            self.accessToken = accessToken
+            self.expiresIn = expiresIn
+            self.accountID = accountID
+            self.providerName = providerName
         }
     }
 
-    // POST /v1/events
-    public struct CreateEventRequest: Codable, Equatable {
-        public var event: MeetingEvent
-        public var defaultCalendarID: String
-        public var mirrorCalendarIDs: [String]
-        public init(event: MeetingEvent, defaultCalendarID: String, mirrorCalendarIDs: [String] = []) {
-            self.event = event
-            self.defaultCalendarID = defaultCalendarID
-            self.mirrorCalendarIDs = mirrorCalendarIDs
+    // POST /v1/cronofy/token/refresh  — backend refreshes using its stored refresh token.
+    public struct CronofyRefreshResponse: Codable, Equatable {
+        public var accessToken: String
+        public var expiresIn: Int
+        public init(accessToken: String, expiresIn: Int) {
+            self.accessToken = accessToken
+            self.expiresIn = expiresIn
         }
     }
 
-    public struct CreateEventResponse: Codable, Equatable {
-        public var ref: SyncedEventRef
-        public init(ref: SyncedEventRef) { self.ref = ref }
-    }
-
-    // POST /v1/events/{remoteID}/rsvp
-    public struct RSVPRequest: Codable, Equatable {
-        public var attendee: Attendee
-        public var status: RSVPStatus
-        public init(attendee: Attendee, status: RSVPStatus) {
-            self.attendee = attendee
-            self.status = status
-        }
-    }
-
-    // Webhook payload pushed to the backend by the provider when RSVP changes.
+    // Webhook the backend receives from Cronofy when attendee status changes.
     public struct RSVPWebhook: Codable, Equatable {
         public var remoteID: String
         public var attendees: [Attendee]

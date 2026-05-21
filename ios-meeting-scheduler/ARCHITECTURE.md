@@ -122,16 +122,25 @@ all providers. Yes — a unified layer is the right call. Recommendation:
 | **Composio** | AI‑agent *tool‑calling* across SaaS | ★★ | Has Google Calendar / Outlook, but oriented to agent tools, not calendar sync primitives. Workable as a swap‑in. |
 | Direct (Google Calendar API + MS Graph + CalDAV) | — | ★ | Most control, most work, three OAuth flows to maintain. |
 
-Decision: **abstract behind `CalendarSyncProvider`** so the concrete backend is
-swappable. The scaffold ships `StubCalendarSyncProvider`; a real
-`CronofyCalendarSyncProvider` / `NylasCalendarSyncProvider` / `ComposioCalendarSyncProvider`
-implements the same protocol later with **no app changes**.
+**Decision: Cronofy.** It's the only option that requires *no* per‑provider
+OAuth app and *no* Google/Microsoft production verification — you register one
+app in the Cronofy dashboard and use its client id/secret. The work is still
+abstracted behind `CalendarSyncProvider`, so Nylas/Composio remain drop‑in
+swaps, but `CronofyCalendarSyncProvider` is the implemented path.
 
 ```
 CalendarSyncProvider (protocol)
  ├─ EventKitCalendarService        // on‑device iCloud/local, no backend needed
- └─ StubCalendarSyncProvider       // mock remote; replace with Cronofy/Nylas/Composio
+ ├─ CronofyCalendarSyncProvider    // REAL: Cronofy REST (chosen provider)
+ └─ StubCalendarSyncProvider       // offline fallback when Cronofy isn't configured
 ```
+
+The app calls Cronofy **directly** with a short‑lived access token; the backend
+exists only to exchange/refresh tokens (it holds the client secret) and to
+receive RSVP push notifications. `CalendarProviderFactory` returns the real
+Cronofy provider when `CronofyConfig` is configured and a token is present,
+otherwise the stub — so the project builds and runs before any Cronofy account
+exists.
 
 **Default calendar = source of truth.** The organizer designates one connected
 calendar as the default. The event is created there (it owns the attendee list
@@ -141,15 +150,22 @@ updated event bubble.
 
 ---
 
-## 5. Auth
+## 5. Auth (Cronofy hosted)
 
-- **Provider OAuth** runs from the **host app** via `ASWebAuthenticationSession`
-  (not from the extension — extensions shouldn't host OAuth). Tokens are stored
-  in the shared Keychain access group so the extension can read them.
-- `AccountConnectionService` is the protocol; `StubAccountConnectionService`
-  fakes a connected account today. The real implementation hands the auth code
-  to the backend, which holds long‑lived provider tokens (the unified provider
-  manages refresh).
+- The host app opens **Cronofy hosted auth** in `ASWebAuthenticationSession`
+  (`app.cronofy.com/oauth/authorize`). The user picks Google/Outlook/iCloud
+  *inside* Cronofy's flow — one connect, no per‑provider screens.
+  (`CronofyAuthCoordinator` + `CronofyAuthSession`.)
+- The redirect returns a one‑time `code` to the `convene://oauth/cronofy`
+  callback. The app sends it to the backend, which exchanges it at
+  `/oauth/token` **using the client secret** and returns a short‑lived access
+  token (`API.CronofyExchangeRequest/Response`).
+- `CronofyTokenStore` caches the access token (shared with the extension) and
+  asks the backend to refresh it when it expires. **Scaffold caveat:** tokens
+  sit in App Group `UserDefaults` today; production must use the shared Keychain
+  access group (already in the entitlements).
+- Register the redirect URI and your client id in the Cronofy dashboard, then
+  set `CronofyConfig.shared.clientID`.
 
 ---
 
@@ -174,9 +190,10 @@ Sources/
   Shared/ (ConveneKit)
     Models/                 Poll, MeetingEvent, Attendee, ConveneMessage
     Poll/                   PollEngine (tally + winning slot)
-    Calendar/               CalendarSyncProvider, EventKit + stub, coordinator
-    Auth/                   AccountConnectionService + stub, ConnectedAccount
-    Backend/                ConveneBackendClient protocol, stub, API DTOs
+    Calendar/               CalendarSyncProvider, EventKit + stub, coordinator,
+                            factory, selection store
+    Calendar/Cronofy/       Config, auth session, REST provider, token store
+    Backend/                ConveneBackendClient (Cronofy OAuth broker), stub, DTOs
     Util/                   MessageURLCodec, date helpers
 Tests/
   ConveneKitTests/          PollEngine + codec unit tests
@@ -187,13 +204,15 @@ Tests/
 ## 8. Phasing
 
 1. **Phase 0 (this scaffold)** — targets, models, poll engine, message codec,
-   EventKit local writes, stubbed backend + auth, host‑app onboarding shell.
-2. **Phase 1** — real `.ics` universal‑link generation + recipient one‑tap add,
-   end‑to‑end on a single iCloud account (no backend).
-3. **Phase 2** — backend service + chosen unified provider (Cronofy/Nylas),
-   real OAuth, cross‑provider mirror, default‑calendar source of truth.
-4. **Phase 3** — RSVP webhooks → live event‑bubble updates; participant status
-   surfaced in the poll/event bubble.
+   EventKit local writes, host‑app onboarding shell, **real Cronofy REST
+   provider + hosted‑auth wiring** behind a stubbed token broker.
+2. **Phase 1** — stand up the backend's two OAuth endpoints (`/oauth/token`
+   exchange + refresh) with the Cronofy client secret; set `CronofyConfig`
+   client id. End‑to‑end create + sync on a real Google/Outlook account.
+3. **Phase 2** — `.ics` universal‑link generation for recipients without the
+   app; Keychain‑backed token storage.
+4. **Phase 3** — Cronofy RSVP push notifications → backend webhook → live
+   event‑bubble updates; participant status surfaced in the bubble.
 
 ---
 
