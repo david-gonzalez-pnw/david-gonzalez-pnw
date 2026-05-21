@@ -1,0 +1,65 @@
+# XcodeGen project definition.
+# Generate the Xcode project locally with:  xcodegen generate
+# (brew install xcodegen)
+name: Convene
+options:
+  bundleIdPrefix: com.davidgonzalez.convene
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    DEVELOPMENT_TEAM: "" # set your Apple Developer Team ID
+    SWIFT_VERSION: "5.9"
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+
+targets:
+  # ---- Shared framework -------------------------------------------------
+  ConveneKit:
+    type: framework
+    platform: iOS
+    sources:
+      - path: Sources/Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.davidgonzalez.convene.kit
+
+  # ---- Host app ---------------------------------------------------------
+  Convene:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sources/App
+    dependencies:
+      - target: ConveneKit
+      - target: MessagesExtension # embeds the appex
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.davidgonzalez.convene
+        INFOPLIST_FILE: Sources/App/Info.plist
+        CODE_SIGN_ENTITLEMENTS: Sources/App/Convene.entitlements
+
+  # ---- iMessage app extension ------------------------------------------
+  MessagesExtension:
+    type: app-extension.messages
+    platform: iOS
+    sources:
+      - path: Sources/MessagesExtension
+    dependencies:
+      - target: ConveneKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.davidgonzalez.convene.messages
+        INFOPLIST_FILE: Sources/MessagesExtension/Info.plist
+        CODE_SIGN_ENTITLEMENTS: Sources/MessagesExtension/MessagesExtension.entitlements
+
+  # ---- Unit tests -------------------------------------------------------
+  ConveneKitTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Tests/ConveneKitTests
+    dependencies:
+      - target: ConveneKit

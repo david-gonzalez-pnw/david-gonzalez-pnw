@@ -1,0 +1,17 @@
+# Generated Xcode project (regenerate with `xcodegen generate`)
+*.xcodeproj
+*.xcworkspace
+
+# Xcode / build
+build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+.swiftpm/
+
+# macOS
+.DS_Store
+
+# Secrets — never commit provider keys
+Secrets.xcconfig
+*.env
