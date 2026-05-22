@@ -1,0 +1,12 @@
+# .NET build output
+bin/
+obj/
+publish/
+
+# Functions local settings (secrets) — never commit
+local.settings.json
+
+# Rider/VS
+.idea/
+.vs/
+*.user

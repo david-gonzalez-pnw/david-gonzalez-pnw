@@ -1,0 +1,18 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "Cosmos__accountEndpoint": "https://localhost:8081",
+    "Cosmos__databaseName": "convene",
+    "Cronofy__ClientId": "",
+    "Cronofy__ClientSecret": "",
+    "Cronofy__DataCenter": "us",
+    "Auth__SigningKey": "dev-only-change-me-this-must-be-at-least-32-bytes",
+    "Auth__Issuer": "https://convene.local",
+    "Auth__AllowUnverifiedAttestation": "false",
+    "Apple__BundleId": "com.davidgonzalez.convene",
+    "KeyVault__uri": "",
+    "TokenEncryption__keyId": ""
+  }
+}

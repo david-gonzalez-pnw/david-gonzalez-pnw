@@ -1,0 +1,63 @@
+name: deploy-backend
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'convene-backend/**'
+
+permissions:
+  id-token: write   # required for Azure OIDC federated login
+  contents: read
+
+env:
+  RESOURCE_GROUP: convene-rg
+  DOTNET_VERSION: '10.0.x'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: convene-backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Provision infrastructure (Bicep)
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            az deployment group create \
+              --resource-group "$RESOURCE_GROUP" \
+              --template-file convene-backend/infra/main.bicep \
+              --parameters convene-backend/infra/main.bicepparam \
+              --parameters cronofyClientSecret="${{ secrets.CRONOFY_CLIENT_SECRET }}"
+
+      - name: Get function app name
+        id: infra
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            NAME=$(az deployment group show -g "$RESOURCE_GROUP" -n main --query properties.outputs.functionAppName.value -o tsv)
+            echo "functionAppName=$NAME" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Publish
+        run: dotnet publish src/Convene.Functions/Convene.Functions.csproj -c Release -o ./publish
+
+      - name: Deploy to Azure Functions
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ steps.infra.outputs.functionAppName }}
+          package: convene-backend/publish
